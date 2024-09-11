@@ -3,7 +3,7 @@ import {
   GitCommitIcon,
   MessageSquareIcon,
 } from "lucide-react";
-import GameStats from "@/types/GameStats";
+import { GameStats } from "@/types/GameStats";
 
 export default function Footer({
   currentPRIndex,
