@@ -103,16 +103,16 @@ export function PrReviewGame() {
 
   const currentPR = useMemo(() => prData[currentPRIndex], [currentPRIndex]);
 
-  import { GameStats } from "@/types/GameStats"
+import { GameStats } from "@/types/GameStats"
 
-  const gameStats: GameStats = useMemo(
-    () => ({
-      totalPRs: prData.length,
-      totalComments: prData.reduce((sum, pr) => sum + pr.comments, 0),
-      totalCommits: prData.reduce((sum, pr) => sum + pr.commits, 0),
-    }),
-    []
-  );
+const gameStats: GameStats = useMemo(
+  () => ({
+    totalPRs: prData.length,
+    totalComments: prData.reduce((sum, pr) => sum + pr.comments, 0),
+    totalCommits: prData.reduce((sum, pr) => sum + pr.commits, 0),
+  }),
+  []
+);
 
   const randomPRIndex = (): number => {
     // Get a random index, but not an index that's already completed in completedJobs

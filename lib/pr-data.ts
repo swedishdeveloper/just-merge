@@ -309,5 +309,13 @@ function emojiReviewPR(prContent) {
   return emojis.includes(':thumbsup:') ? 'LGTM' : 'Needs work';
 }
 `,
+    user: {
+      name: "Emoji Expert",
+      avatar: "https://i.pravatar.cc/150?img=34",
+    },
+    labels: ["review", "fun"],
+    commits: 1,
+    comments: 2,
+    isCorrect: true,
   },
 ];
