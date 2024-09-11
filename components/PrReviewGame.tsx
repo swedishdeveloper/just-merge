@@ -12,7 +12,7 @@ import {
   CoffeeIcon,
   RocketIcon,
 } from "lucide-react";
-import { prData, initializePRData } from "@/lib/pr-data";
+import { generatePRData } from "@/lib/gpt4-pr-generator";
 import confetti from "canvas-confetti";
 import { CorrectDecisionNotification } from "@/components/CorrectDescisionNotification";
 import { IncorrectNotification } from "@/components/IncorrectNotification";
@@ -25,6 +25,7 @@ const INITIAL_TIME = 60;
 const COFFEE_BOOST_DURATION = 10000;
 
 export function PrReviewGame() {
+  const [prData, setPRData] = useState([]);
   const [currentPRIndex, setCurrentPRIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(INITIAL_TIME);
@@ -37,12 +38,18 @@ export function PrReviewGame() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    async function loadPRData() {
-      await initializePRData();
-      setIsLoading(false);
-    }
-    loadPRData();
+    generatePRData().then((data) => {
+      setPRData(data);
+    });
   }, []);
+
+  useEffect(() => {
+    if (prData.length > 0) {
+      setIsLoading(false);
+    } else {
+      setIsLoading(true);
+    }
+  }, [prData]);
 
   useEffect(() => {
     if (timeLeft > 0 && !gameOver) {
@@ -53,47 +60,49 @@ export function PrReviewGame() {
     }
   }, [timeLeft, gameOver]);
 
-  const handleDecision = useCallback(
-    (decision: "merge" | "reject" | "needsWork") => {
-      const currentPR = prData[currentPRIndex];
-      const isCorrectDecision =
-        (currentPR.isCorrect && decision === "merge") ||
-        (!currentPR.isCorrect && decision === "reject");
+  useEffect(() => {
+    if (completedJobs.length === prData.length && !gameOver) {
+      setGameOver(true);
+    }
+  }, [completedJobs, prData, timeLeft]);
 
-      setCompletedJobs([...completedJobs, currentPRIndex]);
+  const handleDecision = (decision: string) => {
+    const currentPR = prData[currentPRIndex];
+    const isCorrectDecision =
+      (currentPR.isCorrect && decision === "merge") ||
+      (!currentPR.isCorrect && decision === "reject");
 
-      if (isCorrectDecision) {
-        const baseScore = 10;
-        const streakBonus = streak * 5;
-        const coffeeMultiplier = coffeeBoost ? 2 : 1;
-        const pointsEarned = (baseScore + streakBonus) * coffeeMultiplier;
+    setCompletedJobs((prevCompletedJobs) => [
+      ...prevCompletedJobs,
+      currentPRIndex,
+    ]);
 
-        setScore((prevScore) => prevScore + pointsEarned);
-        setStreak((prevStreak) => prevStreak + 1);
-        setShowCorrectDecision(true);
+    if (isCorrectDecision) {
+      const baseScore = 10;
+      const streakBonus = streak * 5;
+      const coffeeMultiplier = coffeeBoost ? 2 : 1;
+      const pointsEarned = (baseScore + streakBonus) * coffeeMultiplier;
 
-        confetti({
-          particleCount: 100,
-          spread: 70,
-          origin: { y: 0.6 },
-        });
-      } else {
-        setStreak(0);
-        setShowErrorLog(true);
-      }
+      setScore((prevScore) => prevScore + pointsEarned);
+      setStreak((prevStreak) => prevStreak + 1);
+      setShowCorrectDecision(true);
 
-      setTimeout(() => {
-        if (completedJobs.length < prData.length) {
-          setCurrentPRIndex(randomPRIndex());
-          setShowCorrectDecision(false);
-          setShowErrorLog(false);
-        } else {
-          setGameOver(true);
-        }
-      }, 1000);
-    },
-    [currentPRIndex, streak, coffeeBoost]
-  );
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+      });
+    } else {
+      setStreak(0);
+      setShowErrorLog(true);
+    }
+
+    setTimeout(() => {
+      setCurrentPRIndex(randomPRIndex());
+      setShowCorrectDecision(false);
+      setShowErrorLog(false);
+    }, 1000);
+  };
 
   const restartGame = useCallback(() => {
     setCurrentPRIndex(0);
@@ -104,14 +113,13 @@ export function PrReviewGame() {
     setCoffeeBoost(false);
     setShowErrorLog(false);
     setShowCorrectDecision(false);
+    setCompletedJobs([]);
   }, []);
 
   const activateCoffeeBoost = useCallback(() => {
     setCoffeeBoost(true);
     setTimeout(() => setCoffeeBoost(false), COFFEE_BOOST_DURATION);
   }, []);
-
-  const currentPR = useMemo(() => prData[currentPRIndex], [currentPRIndex]);
 
   const gameStats: GameStats = useMemo(
     () => ({
@@ -123,16 +131,19 @@ export function PrReviewGame() {
   );
 
   const randomPRIndex = (): number => {
-    // Get a random index, but not an index that's already completed in completedJobs
-    const filteredPRs = prData.filter(
+    const availablePRs = prData.filter(
       (_, index) => !completedJobs.includes(index)
     );
-    return Math.floor(Math.random() * filteredPRs.length);
+    return availablePRs.length
+      ? prData.indexOf(
+          availablePRs[Math.floor(Math.random() * availablePRs.length)]
+        )
+      : -1;
   };
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center h-screen w-full">
         <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
       </div>
     );
@@ -140,12 +151,27 @@ export function PrReviewGame() {
 
   return (
     <div className="mx-auto p-4 bg-gray-100 rounded-lg shadow w-1/2">
-      {/* ... (rest of the component) */}
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex items-center gap-2">
+          <GitPullRequestIcon className="w-8 h-8 text-blue-500" />
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 text-transparent bg-clip-text">
+            Just Merge
+          </h1>
+        </div>
+        <div className="flex items-center gap-4">
+          <Progress
+            value={(timeLeft / INITIAL_TIME) * 100}
+            className="w-[100px] bg-gray-900"
+          />
+          <span className="font-mono text-lg">{timeLeft}s</span>
+        </div>
+      </div>
+
       {!gameOver ? (
         <div className="relative">
           {showErrorLog && <IncorrectNotification />}
           {showCorrectDecision && <CorrectDecisionNotification />}
-          <PRDetails pr={currentPR} />
+          <PRDetails pr={prData[currentPRIndex]} />
           <GameControls
             onDecision={handleDecision}
             onCoffeeBoost={activateCoffeeBoost}

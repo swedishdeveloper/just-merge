@@ -1,28 +1,50 @@
+"use server";
 import { PR } from "@/types/PR";
+import { serverHooks } from "next/dist/server/app-render/entry-base";
 import OpenAI from "openai";
+import { zodResponseFormat } from "openai/helpers/zod.mjs";
+import { z } from "zod";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-export async function generatePRData(): Promise<PR[]> {
-  const prompt = `Generate an array of 5 pull request objects for a fictional software project. Each object should have the following properties:
-  - title: A brief, descriptive title for the PR
-  - description: A short description of the changes
-  - code: A small code snippet (20-30 lines) related to the PR
-  - user: An object with 'name' and 'avatar' properties
-  - labels: An array of 1-3 relevant labels
-  - commits: A number between 1 and 5
-  - comments: A number between 0 and 10
-  - isCorrect: A boolean indicating if the PR should be merged (70% true, 30% false)
+const PRData = z.object({
+  prList: z.array(
+    z.object({
+      title: z.string(),
+      description: z.string(),
+      code: z.string(),
+      user: z.object({
+        name: z.string(),
+        avatar: z
+          .string()
+          .describe("URL to the user's avatar, i.pravatar.cc url."),
+      }),
+      labels: z.array(z.string()),
+      commits: z.number(),
+      comments: z.number(),
+      isCorrect: z.boolean(),
+    })
+  ),
+});
 
-  Make sure to include a mix of serious and humorous PRs, with varying levels of complexity and correctness.`;
+export async function generatePRData(): Promise<PR[]> {
+  const prompt = "Generate 3 funny pull requests.";
 
   const response = await openai.chat.completions.create({
-    model: "gpt-4",
-    messages: [{ role: "user", content: prompt }],
+    model: "gpt-4o-mini",
+    messages: [
+      {
+        role: "system",
+        content:
+          "You are an assistant that writes funny PRs, some of them if faulty code, some of them is correct code. Short codes only.",
+      },
+      { role: "user", content: prompt },
+    ],
+    response_format: zodResponseFormat(PRData, "pr_data"),
   });
 
-  const generatedData = JSON.parse(response.choices[0].message.content || "[]");
-  return generatedData;
+  const generatedData = JSON.parse(response.choices[0].message.content);
+  return generatedData.prList;
 }
