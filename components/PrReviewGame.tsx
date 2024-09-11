@@ -19,7 +19,7 @@ import { IncorrectNotification } from "@/components/IncorrectNotification";
 import { PRDetails } from "@/components/PrDetails";
 import { GameControls } from "./GameControls";
 
-const INITIAL_TIME = 30;
+const INITIAL_TIME = 60;
 const COFFEE_BOOST_DURATION = 10000;
 
 export function PrReviewGame() {
@@ -31,6 +31,7 @@ export function PrReviewGame() {
   const [coffeeBoost, setCoffeeBoost] = useState(false);
   const [showErrorLog, setShowErrorLog] = useState(false);
   const [showCorrectDecision, setShowCorrectDecision] = useState(false);
+  const [completedJobs, setCompletedJobs] = useState<number[]>([]);
 
   useEffect(() => {
     if (timeLeft > 0 && !gameOver) {
@@ -47,6 +48,8 @@ export function PrReviewGame() {
       const isCorrectDecision =
         (currentPR.isCorrect && decision === "merge") ||
         (!currentPR.isCorrect && decision === "reject");
+
+      setCompletedJobs([...completedJobs, currentPRIndex]);
 
       if (isCorrectDecision) {
         const baseScore = 10;
@@ -69,8 +72,8 @@ export function PrReviewGame() {
       }
 
       setTimeout(() => {
-        if (currentPRIndex < prData.length - 1) {
-          setCurrentPRIndex((prevIndex) => prevIndex + 1);
+        if (completedJobs.length < prData.length) {
+          setCurrentPRIndex(randomPRIndex());
           setShowCorrectDecision(false);
           setShowErrorLog(false);
         } else {
@@ -108,16 +111,27 @@ export function PrReviewGame() {
     []
   );
 
+  const randomPRIndex = () => {
+    //Hämta ett slumpat index, men inte ett index som redan är avklarat i completedJobs
+    const filteredPRs = prData.filter(
+      (pr, index) => !completedJobs.includes(index)
+    );
+    return Math.floor(Math.random() * filteredPRs.length);
+  };
+
   return (
     <div className="mx-auto p-4 bg-gray-100 rounded-lg shadow w-1/2">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">GitHub PR Review Game</h1>
+        <div className="flex items-center gap-2">
+          <GitPullRequestIcon className="w-8 h-8 text-blue-500" />
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 text-transparent bg-clip-text">
+            Just Merge
+          </h1>
+        </div>
         <div className="flex items-center gap-4">
-          <Badge variant="secondary" className="text-lg">}
-          </Badge>
           <Progress
             value={(timeLeft / INITIAL_TIME) * 100}
-            className="w-[100px]"
+            className="w-[100px] bg-gray-900"
           />
           <span className="font-mono text-lg">{timeLeft}s</span>
         </div>
