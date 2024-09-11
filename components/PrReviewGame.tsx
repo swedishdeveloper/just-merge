@@ -12,7 +12,7 @@ import {
   CoffeeIcon,
   RocketIcon,
 } from "lucide-react";
-import { prData } from "@/lib/pr-data";
+import { prData, initializePRData } from "@/lib/pr-data";
 import confetti from "canvas-confetti";
 import { CorrectDecisionNotification } from "@/components/CorrectDescisionNotification";
 import { IncorrectNotification } from "@/components/IncorrectNotification";
@@ -34,6 +34,15 @@ export function PrReviewGame() {
   const [showErrorLog, setShowErrorLog] = useState(false);
   const [showCorrectDecision, setShowCorrectDecision] = useState(false);
   const [completedJobs, setCompletedJobs] = useState<number[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadPRData() {
+      await initializePRData();
+      setIsLoading(false);
+    }
+    loadPRData();
+  }, []);
 
   useEffect(() => {
     if (timeLeft > 0 && !gameOver) {
@@ -121,24 +130,17 @@ export function PrReviewGame() {
     return Math.floor(Math.random() * filteredPRs.length);
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="mx-auto p-4 bg-gray-100 rounded-lg shadow w-1/2">
-      <div className="flex justify-between items-center mb-4">
-        <div className="flex items-center gap-2">
-          <GitPullRequestIcon className="w-8 h-8 text-blue-500" />
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 text-transparent bg-clip-text">
-            Just Merge
-          </h1>
-        </div>
-        <div className="flex items-center gap-4">
-          <Progress
-            value={(timeLeft / INITIAL_TIME) * 100}
-            className="w-[100px] bg-gray-900"
-          />
-          <span className="font-mono text-lg">{timeLeft}s</span>
-        </div>
-      </div>
-
+      {/* ... (rest of the component) */}
       {!gameOver ? (
         <div className="relative">
           {showErrorLog && <IncorrectNotification />}
