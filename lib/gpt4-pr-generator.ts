@@ -6,7 +6,7 @@ const openai = new OpenAI({
 });
 
 export async function generatePRData(): Promise<PR[]> {
-  const prompt = `Generate an array of 15 pull request objects for a fictional software project. Each object should have the following properties:
+  const prompt = `Generate an array of 5 pull request objects for a fictional software project. Each object should have the following properties:
   - title: A brief, descriptive title for the PR
   - description: A short description of the changes
   - code: A small code snippet (20-30 lines) related to the PR
