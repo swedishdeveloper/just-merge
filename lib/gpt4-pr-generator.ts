@@ -13,7 +13,7 @@ const PRData = z.object({
   prList: z.array(
     z.object({
       title: z.string(),
-      description: z.string(),
+      description: z.string().describe("Short description of the PR."),
       code: z.string(),
       user: z.object({
         name: z.string(),
@@ -30,18 +30,19 @@ const PRData = z.object({
 });
 
 export async function generatePRData(): Promise<PR[]> {
-  const prompt = "Generate 3 funny pull requests.";
+  const prompt = "Generate 10 funny pull requests.";
 
   const response = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
+    model: "gpt-4o-2024-08-06",
     messages: [
       {
         role: "system",
-        content:
-          "You are an assistant that writes funny PRs, some of them if faulty code, some of them is correct code. Short codes only.",
+        content: `You are an assistant that writes funny PRs, some of them if faulty code, some of them is correct code.
+          The code could be either funny or serious.`,
       },
       { role: "user", content: prompt },
     ],
+    temperature: 0.5,
     response_format: zodResponseFormat(PRData, "pr_data"),
   });
 

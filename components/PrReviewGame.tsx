@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, use } from "react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
@@ -38,44 +38,52 @@ export function PrReviewGame() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    generatePRData().then((data) => {
-      setPRData(data);
-    });
+    fetchPRData();
   }, []);
 
   useEffect(() => {
-    if (prData.length > 0) {
-      setIsLoading(false);
-    } else {
-      setIsLoading(true);
+    if (gameOver || timeLeft <= 0) {
+      setGameOver(true);
+      return;
     }
-  }, [prData]);
+
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [gameOver, timeLeft]);
 
   useEffect(() => {
-    if (timeLeft > 0 && !gameOver) {
-      const timer = setTimeout(() => setTimeLeft((prev) => prev - 1), 1000);
-      return () => clearTimeout(timer);
-    } else if (timeLeft === 0) {
+    if (completedJobs.length === prData.length && prData.length > 0) {
       setGameOver(true);
-    }
-  }, [timeLeft, gameOver]);
-
-  useEffect(() => {
-    if (completedJobs.length === prData.length && !gameOver) {
-      setGameOver(true);
+      confetti();
     }
   }, [completedJobs, prData, timeLeft]);
 
+  useEffect(() => {
+    console.log("Current PR index:", currentPRIndex);
+    console.log("Job completed:", completedJobs);
+  }, [currentPRIndex, completedJobs]);
+
+  const fetchPRData = async () => {
+    try {
+      setIsLoading(true);
+      const data = await generatePRData();
+      setPRData(data);
+    } catch (error) {
+      console.error("Failed to fetch PR data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleDecision = (decision: string) => {
+    console.log("Handle decision", decision);
     const currentPR = prData[currentPRIndex];
     const isCorrectDecision =
       (currentPR.isCorrect && decision === "merge") ||
       (!currentPR.isCorrect && decision === "reject");
-
-    setCompletedJobs((prevCompletedJobs) => [
-      ...prevCompletedJobs,
-      currentPRIndex,
-    ]);
 
     if (isCorrectDecision) {
       const baseScore = 10;
@@ -83,8 +91,8 @@ export function PrReviewGame() {
       const coffeeMultiplier = coffeeBoost ? 2 : 1;
       const pointsEarned = (baseScore + streakBonus) * coffeeMultiplier;
 
-      setScore((prevScore) => prevScore + pointsEarned);
-      setStreak((prevStreak) => prevStreak + 1);
+      setScore((prev) => prev + pointsEarned);
+      setStreak((prev) => prev + 1);
       setShowCorrectDecision(true);
 
       confetti({
@@ -97,10 +105,12 @@ export function PrReviewGame() {
       setShowErrorLog(true);
     }
 
-    setTimeout(() => {
-      setCurrentPRIndex(randomPRIndex());
+    const timer = setTimeout(() => {
+      const newIndex = randomPRIndex();
+      setCurrentPRIndex(newIndex);
       setShowCorrectDecision(false);
       setShowErrorLog(false);
+      setCompletedJobs((prev) => [...prev, newIndex]);
     }, 1000);
   };
 
@@ -114,6 +124,7 @@ export function PrReviewGame() {
     setShowErrorLog(false);
     setShowCorrectDecision(false);
     setCompletedJobs([]);
+    fetchPRData();
   }, []);
 
   const activateCoffeeBoost = useCallback(() => {
@@ -127,10 +138,10 @@ export function PrReviewGame() {
       totalComments: prData.reduce((sum, pr) => sum + pr.comments, 0),
       totalCommits: prData.reduce((sum, pr) => sum + pr.commits, 0),
     }),
-    []
+    [prData]
   );
 
-  const randomPRIndex = (): number => {
+  const randomPRIndex = useCallback((): number => {
     const availablePRs = prData.filter(
       (_, index) => !completedJobs.includes(index)
     );
@@ -139,7 +150,7 @@ export function PrReviewGame() {
           availablePRs[Math.floor(Math.random() * availablePRs.length)]
         )
       : -1;
-  };
+  }, [prData, completedJobs]);
 
   if (isLoading) {
     return (
@@ -150,7 +161,7 @@ export function PrReviewGame() {
   }
 
   return (
-    <div className="mx-auto p-4 bg-gray-100 rounded-lg shadow w-1/2">
+    <div className="mx-auto p-4 bg-gray-100 rounded-lg shadow w-full max-w-2xl">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center gap-2">
           <GitPullRequestIcon className="w-8 h-8 text-blue-500" />
@@ -161,7 +172,7 @@ export function PrReviewGame() {
         <div className="flex items-center gap-4">
           <Progress
             value={(timeLeft / INITIAL_TIME) * 100}
-            className="w-[100px] bg-gray-900"
+            className="w-[100px] bg-gray-300"
           />
           <span className="font-mono text-lg">{timeLeft}s</span>
         </div>
