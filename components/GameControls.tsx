@@ -19,9 +19,6 @@ export function GameControls({ onDecision, onCoffeeBoost, coffeeBoost }: GameCon
         <Button onClick={() => onDecision('reject')} variant="destructive" className="w-full sm:w-32">
           <XIcon className="mr-2 h-4 w-4" /> Reject
         </Button>
-        <Button onClick={() => onDecision('needsWork')} variant="outline" className="w-full sm:w-32">
-          <AlertTriangleIcon className="mr-2 h-4 w-4" /> Needs Work
-        </Button>
         <Button onClick={onCoffeeBoost} disabled={coffeeBoost} className="w-full sm:w-40 bg-yellow-500 hover:bg-yellow-600 disabled:bg-yellow-300">
           <CoffeeIcon className="mr-2 h-4 w-4" /> Coffee Boost
         </Button>

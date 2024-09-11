@@ -1,4 +1,4 @@
-import { PrReviewGame } from "@/components/pr-review-game";
+import { PrReviewGame } from "@/components/PrReviewGame";
 import Image from "next/image";
 
 export default function Home() {
