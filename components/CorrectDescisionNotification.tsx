@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { CheckCircleIcon } from "lucide-react";
 
-export function CorrectDecisionNotification() {
+export function CorrectDecisionNotification(): JSX.Element {
   const [show, setShow] = useState(true);
 
   useEffect(() => {

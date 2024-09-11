@@ -103,7 +103,13 @@ export function PrReviewGame() {
 
   const currentPR = useMemo(() => prData[currentPRIndex], [currentPRIndex]);
 
-  const gameStats = useMemo(
+  interface GameStats {
+    totalPRs: number;
+    totalComments: number;
+    totalCommits: number;
+  }
+
+  const gameStats: GameStats = useMemo(
     () => ({
       totalPRs: prData.length,
       totalComments: prData.reduce((sum, pr) => sum + pr.comments, 0),
@@ -112,10 +118,10 @@ export function PrReviewGame() {
     []
   );
 
-  const randomPRIndex = () => {
-    //Hämta ett slumpat index, men inte ett index som redan är avklarat i completedJobs
+  const randomPRIndex = (): number => {
+    // Get a random index, but not an index that's already completed in completedJobs
     const filteredPRs = prData.filter(
-      (pr, index) => !completedJobs.includes(index)
+      (_, index) => !completedJobs.includes(index)
     );
     return Math.floor(Math.random() * filteredPRs.length);
   };

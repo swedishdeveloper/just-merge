@@ -1,4 +1,18 @@
-export const prData = [
+interface PR {
+  title: string;
+  description: string;
+  code: string;
+  user: {
+    name: string;
+    avatar: string;
+  };
+  labels: string[];
+  commits: number;
+  comments: number;
+  isCorrect: boolean;
+}
+
+export const prData: PR[] = [
   {
     title: "Add dark mode toggle",
     description: "Implements a dark mode toggle in the navbar",

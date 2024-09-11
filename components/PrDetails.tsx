@@ -4,19 +4,21 @@ import { GitCommitIcon, MessageSquareIcon } from "lucide-react"
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
+interface PR {
+  user: {
+    name: string;
+    avatar: string;
+  };
+  commits: number;
+  title: string;
+  labels: string[];
+  description: string;
+  code: string;
+  comments: number;
+}
+
 interface PRDetailsProps {
-  pr: {
-    user: {
-      name: string
-      avatar: string
-    }
-    commits: number
-    title: string
-    labels: string[]
-    description: string
-    code: string
-    comments: number
-  }
+  pr: PR;
 }
 
 export function PRDetails({ pr }: PRDetailsProps) {
