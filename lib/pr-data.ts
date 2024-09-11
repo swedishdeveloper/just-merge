@@ -1,30 +1,11 @@
 import { PR } from "@/types/PR";
+import { generatePRData } from "@/lib/gpt4-pr-generator";
 
-export const prData: PR[] = [
-  {
-    title: "Add dark mode toggle",
-    description: "Implements a dark mode toggle in the navbar",
-    code: `
-const DarkModeToggle = () => {
-  const [isDark, setIsDark] = useState(false);
-  
-  const toggleDarkMode = () => {
-    setIsDark(!isDark);
-    document.body.classList.toggle('dark-mode');
-  };
+export let prData: PR[] = [];
 
-  return <button onClick={toggleDarkMode}>{isDark ? '🌙' : '☀️'}</button>;
-};
-`,
-    user: {
-      name: "Alex Chen",
-      avatar: "https://i.pravatar.cc/150?img=11",
-    },
-    labels: ["feature", "ui/ux"],
-    commits: 1,
-    comments: 2,
-    isCorrect: true,
-  },
+export async function initializePRData() {
+  prData = await generatePRData();
+}
   {
     title: "Fix login bug",
     description: "Resolves issue where users couldn't log in on Tuesdays",
