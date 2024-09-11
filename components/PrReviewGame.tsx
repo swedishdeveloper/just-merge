@@ -18,6 +18,7 @@ import { CorrectDecisionNotification } from "@/components/CorrectDescisionNotifi
 import { IncorrectNotification } from "@/components/IncorrectNotification";
 import { PRDetails } from "@/components/PrDetails";
 import { GameControls } from "./GameControls";
+import Footer from "./Footer";
 
 const INITIAL_TIME = 60;
 const COFFEE_BOOST_DURATION = 10000;
@@ -174,20 +175,7 @@ export function PrReviewGame() {
         </div>
       )}
 
-      <div className="mt-8 flex justify-center gap-4 text-sm text-gray-500">
-        <span className="flex items-center">
-          <GitPullRequestIcon className="mr-1 h-4 w-4" /> {currentPRIndex + 1}/
-          {gameStats.totalPRs} pull requests
-        </span>
-        <span className="flex items-center">
-          <MessageSquareIcon className="mr-1 h-4 w-4" />{" "}
-          {gameStats.totalComments} total comments
-        </span>
-        <span className="flex items-center">
-          <GitCommitIcon className="mr-1 h-4 w-4" /> {gameStats.totalCommits}{" "}
-          total commits
-        </span>
-      </div>
+      <Footer gameStats={gameStats} score={score} />
     </div>
   );
 }
