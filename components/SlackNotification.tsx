@@ -3,11 +3,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { XCircleIcon } from "lucide-react";
 import { useEffect } from "react";
-
-interface SlackNotificationProps {
-  errors: string[];
-  onClose: () => void;
-}
+import { SlackNotificationProps } from "@/types/SlackNotificationProps";
 
 export function SlackNotification({ errors, onClose }: SlackNotificationProps) {
   useEffect(() => {

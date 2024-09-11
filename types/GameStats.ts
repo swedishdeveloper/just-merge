@@ -5,3 +5,8 @@ interface GameStats {
 }
 
 export default GameStats;
+export interface GameStats {
+  totalPRs: number;
+  totalComments: number;
+  totalCommits: number;
+}

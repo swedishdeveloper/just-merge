@@ -2,12 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { GitMergeIcon, XIcon, AlertTriangleIcon, CoffeeIcon } from "lucide-react"
-
-interface GameControlsProps {
-  onDecision: (decision: 'merge' | 'reject' | 'needsWork') => void
-  onCoffeeBoost: () => void
-  coffeeBoost: boolean
-}
+import { GameControlsProps } from "@/types/GameControlsProps"
 
 export function GameControls({ onDecision, onCoffeeBoost, coffeeBoost }: GameControlsProps) {
   return (

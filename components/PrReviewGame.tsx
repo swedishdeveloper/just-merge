@@ -103,11 +103,7 @@ export function PrReviewGame() {
 
   const currentPR = useMemo(() => prData[currentPRIndex], [currentPRIndex]);
 
-  interface GameStats {
-    totalPRs: number;
-    totalComments: number;
-    totalCommits: number;
-  }
+  import { GameStats } from "@/types/GameStats"
 
   const gameStats: GameStats = useMemo(
     () => ({
