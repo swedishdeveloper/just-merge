@@ -156,7 +156,7 @@ export function PrReviewGame() {
   }
 
   return (
-    <div className="p-4 bg-darkMuted rounded-lg shadow w-full max-w-5xl">
+    <div className="p-4 bg-darkMuted rounded-lg shadow w-full max-w-5xl flex flex-col">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center gap-2">
           <GitPullRequestIcon className="w-8 h-8 text-blue-500" />
@@ -174,7 +174,7 @@ export function PrReviewGame() {
       </div>
 
       {!gameOver ? (
-        <div className="relative">
+        <div className="relative bg-black h-full flex flex-col">
           {showErrorLog && <IncorrectNotification />}
           {showCorrectDecision && <CorrectDecisionNotification />}
           <PRDetails pr={prData[currentPRIndex]} />

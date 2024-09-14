@@ -15,8 +15,8 @@ export function GameControls({
   coffeeBoost,
 }: GameControlsProps) {
   return (
-    <div className="border border-gray-700 rounded-lg p-4">
-      <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+    <div className="border border-gray-700 rounded-lg p-4 flex bg-white">
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 w-full">
         <Button
           onClick={() => onDecision("merge")}
           className="w-full bg-green-500 hover:bg-green-600 text-green-900 font-bold"
