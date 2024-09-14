@@ -2,7 +2,7 @@ import { PrReviewGame } from "@/components/PrReviewGame";
 
 export default function Home() {
   return (
-    <div className="h-screen flex flex-col justify-center py-20">
+    <div className="h-screen flex flex-col justify-center sm:py-20">
       <main className="flex justify-center items-stretch h-full">
         <PrReviewGame />
       </main>
