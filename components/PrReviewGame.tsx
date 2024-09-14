@@ -12,7 +12,7 @@ import {
   CoffeeIcon,
   RocketIcon,
 } from "lucide-react";
-import { generatePRData } from "@/lib/gpt4-pr-generator";
+import { generatePRData } from "@/lib/gpt";
 import confetti from "canvas-confetti";
 import { CorrectDecisionNotification } from "@/components/CorrectDescisionNotification";
 import { IncorrectNotification } from "@/components/IncorrectNotification";
@@ -20,6 +20,7 @@ import { PRDetails } from "@/components/PrDetails";
 import { GameControls } from "./GameControls";
 import Footer from "./Footer";
 import { GameStats } from "@/types/GameStats";
+import Loading from "./Loading";
 
 const INITIAL_TIME = 60;
 const COFFEE_BOOST_DURATION = 10000;
@@ -153,11 +154,7 @@ export function PrReviewGame() {
   }, [prData, completedJobs]);
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-screen w-full">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    );
+    return <Loading />;
   }
 
   return (
@@ -215,7 +212,7 @@ export function PrReviewGame() {
         </div>
       )}
 
-      <Footer gameStats={gameStats} score={score} />
+      <Footer currentPRIndex={currentPRIndex} gameStats={gameStats} />
     </div>
   );
 }
