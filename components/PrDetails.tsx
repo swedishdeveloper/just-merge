@@ -63,7 +63,7 @@ export function PRDetails({ pr }: PRDetailsProps) {
                   }}
                   wrapLines={true}
                 >
-                  {pr.oldCode + pr.newCode}
+                  {pr.oldCode}
                 </SyntaxHighlighter>
               </div>
             </>
