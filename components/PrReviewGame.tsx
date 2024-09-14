@@ -1,17 +1,9 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo, use } from "react";
-import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import {
-  GitPullRequestIcon,
-  MessageSquareIcon,
-  GitCommitIcon,
-  StarIcon,
-  CoffeeIcon,
-  RocketIcon,
-} from "lucide-react";
+import { GitPullRequestIcon, StarIcon, CoffeeIcon } from "lucide-react";
 import { generatePRData } from "@/lib/gpt";
 import confetti from "canvas-confetti";
 import { CorrectDecisionNotification } from "@/components/CorrectDescisionNotification";
@@ -22,12 +14,14 @@ import Footer from "./Footer";
 import { GameStats } from "@/types/GameStats";
 import Loading from "./Loading";
 import Error from "./Error";
+import GameOver from "./GameOver";
+import { PR } from "@/types/PR";
 
-const INITIAL_TIME = 60;
+const INITIAL_TIME = 120;
 const COFFEE_BOOST_DURATION = 10000;
 
 export function PrReviewGame() {
-  const [prData, setPRData] = useState([]);
+  const [prData, setPRData] = useState<PR[]>([]);
   const [currentPRIndex, setCurrentPRIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(INITIAL_TIME);
@@ -162,7 +156,7 @@ export function PrReviewGame() {
   }
 
   return (
-    <div className="mx-auto p-4 bg-gray-100 rounded-lg shadow w-full max-w-2xl">
+    <div className="p-4 bg-darkMuted rounded-lg shadow w-full max-w-5xl">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center gap-2">
           <GitPullRequestIcon className="w-8 h-8 text-blue-500" />
@@ -205,18 +199,11 @@ export function PrReviewGame() {
               </Badge>
             </div>
           )}
+          <Footer currentPRIndex={currentPRIndex} gameStats={gameStats} />
         </div>
       ) : (
-        <div className="text-center bg-white p-8 rounded-lg">
-          <h2 className="text-3xl font-bold mb-4">Game Over!</h2>
-          <p className="text-2xl mb-4">Your final score: {score}</p>
-          <Button onClick={restartGame} size="lg" className="animate-bounce">
-            <RocketIcon className="mr-2 h-5 w-5" /> Play Again
-          </Button>
-        </div>
+        <GameOver score={score} restartGame={restartGame} />
       )}
-
-      <Footer currentPRIndex={currentPRIndex} gameStats={gameStats} />
     </div>
   );
 }

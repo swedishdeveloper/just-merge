@@ -1,7 +1,10 @@
 export interface PR {
   title: string;
   description: string;
-  code: string;
+  filename: string;
+  oldCode: string;
+  newCode: string;
+  startingLineNumber: number;
   user: {
     name: string;
     avatar: string;

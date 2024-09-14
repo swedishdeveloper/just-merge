@@ -14,8 +14,6 @@ export function IncorrectNotification(): JSX.Element {
     return () => clearTimeout(timer);
   }, []);
 
-  if (!show) return null;
-
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
       <div className="absolute inset-0 bg-black opacity-50"></div>

@@ -14,7 +14,12 @@ const PRData = z.object({
     z.object({
       title: z.string(),
       description: z.string().describe("Short description of the PR."),
-      code: z.string(),
+      filename: z.string(),
+      oldCode: z
+        .string()
+        .describe("Old code if there is any, else empty string."),
+      newCode: z.string(),
+      startingLineNumber: z.number(),
       user: z.object({
         name: z.string(),
         avatar: z

@@ -1,10 +1,6 @@
 import React from "react";
 
-interface ErrorProps {
-  message: string;
-}
-
-const Error: React.FC<ErrorProps> = () => {
+const Error = () => {
   return (
     <div
       className="text-red-700 p-4 rounded-r shadow-md items-center flex justify-center w-full"
