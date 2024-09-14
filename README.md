@@ -1,8 +1,8 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-
 ## Getting Started
 
-First, run the development server:
+Add your environment variables to a `.env` file. You can use `.env.example` as a template.
+
+To run the development server:
 
 ```bash
 npm run dev
@@ -16,21 +16,21 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## About the project
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Just-Merge is an engaging game that challenges players to merge Pull Requests (PRs) efficiently. Players earn points for each successful merge, with the goal of achieving the highest score possible within a set time limit. This fast-paced game simulates the excitement and pressure of managing a busy development workflow, making it both entertaining and educational for aspiring and experienced developers alike.
 
-## Learn More
+Key features:
 
-To learn more about Next.js, take a look at the following resources:
+- Realistic PR merging simulation
+- Point-based scoring system
+- Time-limited gameplay for added excitement
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Sharpen your code review skills and test your ability to manage multiple PRs simultaneously in this addictive and unique coding-themed game!
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## How to play
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Open the game in your browser
+2. Start merging PRs by clicking on the "Merge" button or press "Reject" to decline.
+3. Use "Coffee Boost" button to get extra points.
+4. Keep an eye on the timer and try to merge as many PRs as possible before time runs out.
