@@ -18,7 +18,8 @@ export function IncorrectNotification(): JSX.Element {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
-      <CheckCircleIcon className="h-32 w-32 text-red-500 animate-scale-up" />
+      <div className="absolute inset-0 bg-black opacity-50"></div>
+      <CheckCircleIcon className="h-32 w-32 text-red-500 z-10" />
     </div>
   );
 }

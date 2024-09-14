@@ -1,13 +1,13 @@
 export interface PR {
+  title: string;
+  description: string;
+  code: string;
   user: {
     name: string;
     avatar: string;
   };
-  commits: number;
-  title: string;
   labels: string[];
-  description: string;
-  code: string;
+  commits: number;
   comments: number;
   isCorrect: boolean;
 }

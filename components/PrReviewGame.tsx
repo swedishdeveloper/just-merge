@@ -21,6 +21,7 @@ import { GameControls } from "./GameControls";
 import Footer from "./Footer";
 import { GameStats } from "@/types/GameStats";
 import Loading from "./Loading";
+import Error from "./Error";
 
 const INITIAL_TIME = 60;
 const COFFEE_BOOST_DURATION = 10000;
@@ -37,6 +38,7 @@ export function PrReviewGame() {
   const [showCorrectDecision, setShowCorrectDecision] = useState(false);
   const [completedJobs, setCompletedJobs] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
 
   useEffect(() => {
     fetchPRData();
@@ -62,11 +64,6 @@ export function PrReviewGame() {
     }
   }, [completedJobs, prData, timeLeft]);
 
-  useEffect(() => {
-    console.log("Current PR index:", currentPRIndex);
-    console.log("Job completed:", completedJobs);
-  }, [currentPRIndex, completedJobs]);
-
   const fetchPRData = async () => {
     try {
       setIsLoading(true);
@@ -74,6 +71,7 @@ export function PrReviewGame() {
       setPRData(data);
     } catch (error) {
       console.error("Failed to fetch PR data:", error);
+      setIsError(true);
     } finally {
       setIsLoading(false);
     }
@@ -113,6 +111,8 @@ export function PrReviewGame() {
       setShowErrorLog(false);
       setCompletedJobs((prev) => [...prev, newIndex]);
     }, 1000);
+
+    return () => clearTimeout(timer);
   };
 
   const restartGame = useCallback(() => {
@@ -152,6 +152,10 @@ export function PrReviewGame() {
         )
       : -1;
   }, [prData, completedJobs]);
+
+  if (isError) {
+    return <Error />;
+  }
 
   if (isLoading) {
     return <Loading />;
