@@ -43,7 +43,7 @@ export function PRDetails({ pr }: PRDetailsProps) {
               {pr.oldCode?.split("\n").length || 0}
             </span>
           </div>
-          <div className="max-h-60 overflow-y-auto">
+          <div className="overflow-y-auto">
             {pr.oldCode && (
               <>
                 <div className="flex bg-codeDeletion p-2">

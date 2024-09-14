@@ -1,6 +1,5 @@
 "use server";
 import { PR } from "@/types/PR";
-import { serverHooks } from "next/dist/server/app-render/entry-base";
 import OpenAI from "openai";
 import { zodResponseFormat } from "openai/helpers/zod.mjs";
 import { z } from "zod";
@@ -35,7 +34,7 @@ const PRData = z.object({
 });
 
 export async function generatePRData(): Promise<PR[]> {
-  const prompt = "Generate 10 funny pull requests.";
+  const prompt = "Generate 1 funny pull requests.";
 
   try {
     const response = await openai.chat.completions.create({
