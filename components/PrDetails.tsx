@@ -45,7 +45,7 @@ export function PRDetails({ pr }: PRDetailsProps) {
         <div className="overflow-y-auto h-full flex flex-col">
           {pr.oldCode && (
             <>
-              <div className="flex bg-codeDeletion p-2">
+              <div className="flex bg-codeDeletion p-2 h-full">
                 <div className="text-red-600 select-none w-5">-</div>
                 <SyntaxHighlighter
                   language="javascript"
@@ -63,12 +63,12 @@ export function PRDetails({ pr }: PRDetailsProps) {
                   }}
                   wrapLines={true}
                 >
-                  {pr.oldCode}
+                  {pr.oldCode + pr.newCode + pr.oldCode}
                 </SyntaxHighlighter>
               </div>
             </>
           )}
-          <div className="flex bg-codeAddition p-2">
+          <div className="flex bg-codeAddition p-2 h-full">
             <div className="text-green-600 select-none w-5">+</div>
             <SyntaxHighlighter
               language="javascript"
