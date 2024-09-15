@@ -11,7 +11,7 @@ interface PRDetailsProps {
 
 export function PRDetails({ pr }: PRDetailsProps) {
   return (
-    <div className="bg-darkGreen border border-gray-700 rounded-lg mb-4 p-4 h-full flex flex-col">
+    <div className="bg-darkGreen border border-gray-700 rounded-lg mb-4 p-4 flex flex-col">
       <div className="flex items-center gap-2 mb-2">
         <Avatar className="w-10 h-10">
           <AvatarImage src={pr.user.avatar} alt={pr.user.name} />
@@ -34,7 +34,7 @@ export function PRDetails({ pr }: PRDetailsProps) {
         ))}
       </div>
       <p className="mb-4">{pr.description}</p>
-      <div className="mb-4 border border-gray-700 rounded-md h-full flex flex-col">
+      <div className="mb-4 border border-gray-700 rounded-md flex flex-col">
         <div className="flex items-center justify-between bg-darkMuted p-2 border-b border-gray-700">
           <span className="text-sm font-semibold">{pr.filename}</span>
           <span className="text-sm text-gray-600">
@@ -42,10 +42,10 @@ export function PRDetails({ pr }: PRDetailsProps) {
             {pr.oldCode?.split("\n").length || 0}
           </span>
         </div>
-        <div className="overflow-y-auto h-full flex flex-col">
+        <div className="overflow-y-auto flex flex-col">
           {pr.oldCode && (
             <>
-              <div className="flex bg-codeDeletion p-2 h-full">
+              <div className="flex bg-codeDeletion p-2">
                 <div className="text-red-600 select-none w-5">-</div>
                 <SyntaxHighlighter
                   language="javascript"
@@ -68,7 +68,7 @@ export function PRDetails({ pr }: PRDetailsProps) {
               </div>
             </>
           )}
-          <div className="flex bg-codeAddition p-2 h-full">
+          <div className="flex bg-codeAddition p-2">
             <div className="text-green-600 select-none w-5">+</div>
             <SyntaxHighlighter
               language="javascript"

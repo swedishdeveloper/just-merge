@@ -34,6 +34,55 @@ const PRData = z.object({
 });
 
 export async function generatePRData(): Promise<PR[]> {
+  const data = [
+    {
+      title: "Fix the Infinite Loop of Doom",
+      description:
+        "Replaced the infinite while loop with a more productive 'for' loop.",
+      filename: "src/infiniteLoopFix.js",
+      oldCode:
+        'while(true) {\n    console.log("Welcome to the never-ending story!");\n}' +
+        'console.log("The end.");\n' +
+        'console.log("Just kidding!");\n' +
+        'console.log("The end.");\n' +
+        'console.log("Just kidding!");\n' +
+        'console.log("The end.");\n' +
+        'console.log("Just kidding!");\n' +
+        'console.log("The end.");\n' +
+        'console.log("Just kidding!");\n' +
+        'console.log("The end.");\n',
+      newCode:
+        "for(let i = 0; i < 10; i++) {\n" +
+        '    console.log("Welcome to the slightly less infinite story!");\n' +
+        "}\n" +
+        'console.log("The end.");\n' +
+        'console.log("Just kidding!");\n' +
+        'console.log("The end.");\n' +
+        "for(let i = 0; i < 10; i++) {\n" +
+        '    console.log("Welcome to the slightly less infinite story!");\n' +
+        "}\n" +
+        'console.log("The end.");\n' +
+        'console.log("Just kidding!");\n' +
+        'console.log("The end.");\n' +
+        'console.log("Just kidding!");\n' +
+        'console.log("The end.");\n' +
+        'console.log("Just kidding!");\n' +
+        'console.log("The end.");\n' +
+        'console.log("Just kidding!");\n' +
+        'console.log("The end.");',
+      startingLineNumber: 10,
+      user: {
+        name: "John Doe",
+        avatar: "https://i.pravatar.cc/150?u=johndoe",
+      },
+      labels: ["bug"],
+      commits: 1,
+      comments: 3,
+      isCorrect: true,
+    },
+  ];
+  return data;
+
   const prompt = "Generate 1 funny pull requests.";
 
   try {
