@@ -11,7 +11,7 @@ interface PRDetailsProps {
 
 export function PRDetails({ pr }: PRDetailsProps) {
   return (
-    <div className="bg-darkGreen border border-gray-700 rounded-lg mb-4 p-4 flex flex-col">
+    <div className="bg-darkGreen border border-gray-700 rounded-lg p-4 flex flex-1 min-h-0 flex-col">
       <div className="flex items-center gap-2 mb-2">
         <Avatar className="w-10 h-10">
           <AvatarImage src={pr.user.avatar} alt={pr.user.name} />
@@ -34,7 +34,7 @@ export function PRDetails({ pr }: PRDetailsProps) {
         ))}
       </div>
       <p className="mb-4">{pr.description}</p>
-      <div className="mb-4 border border-gray-700 rounded-md flex flex-col">
+      <div className="border border-gray-700 rounded-md flex-1 flex min-h-0 flex-col">
         <div className="flex items-center justify-between bg-darkMuted p-2 border-b border-gray-700">
           <span className="text-sm font-semibold">{pr.filename}</span>
           <span className="text-sm text-gray-600">
@@ -42,7 +42,7 @@ export function PRDetails({ pr }: PRDetailsProps) {
             {pr.oldCode?.split("\n").length || 0}
           </span>
         </div>
-        <div className="overflow-y-auto flex flex-col">
+        <div className="overflow-y-scroll flex flex-1 flex-col min-h-0">
           {pr.oldCode && (
             <>
               <div className="flex bg-codeDeletion p-2">
@@ -91,7 +91,7 @@ export function PRDetails({ pr }: PRDetailsProps) {
           </div>
         </div>
       </div>
-      <div className="flex items-center text-sm text-gray-500">
+      <div className="flex items-center text-sm text-gray-500 mt-2">
         <span className="flex items-center mr-4">
           <GitCommitIcon className="mr-1 h-4 w-4" /> {pr.commits} commit
           {pr.commits > 1 ? "s" : ""}
