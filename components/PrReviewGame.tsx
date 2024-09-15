@@ -174,7 +174,7 @@ export function PrReviewGame() {
       </div>
 
       {!gameOver ? (
-        <div className="relative bg-black h-full flex flex-col">
+        <div className="relative h-full flex flex-col">
           {showErrorLog && <IncorrectNotification />}
           {showCorrectDecision && <CorrectDecisionNotification />}
           <PRDetails pr={prData[currentPRIndex]} />
