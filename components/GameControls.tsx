@@ -1,12 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  GitMergeIcon,
-  XIcon,
-  AlertTriangleIcon,
-  CoffeeIcon,
-} from "lucide-react";
+import { GitMergeIcon, XIcon, CoffeeIcon } from "lucide-react";
 import { GameControlsProps } from "@/types/GameControlsProps";
 
 export function GameControls({
