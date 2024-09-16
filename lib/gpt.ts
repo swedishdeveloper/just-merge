@@ -37,7 +37,7 @@ const PRData = z.object({
 
 export async function generatePRData(): Promise<PR[]> {
   const prompt =
-    "Generate 10 funny pull requests. Create PRs with and without old code.";
+    "Generate 3 funny pull requests. Create PRs with and without old code.";
 
   try {
     const response = await openai.chat.completions.create({
@@ -55,7 +55,6 @@ export async function generatePRData(): Promise<PR[]> {
     });
 
     const generatedData = JSON.parse(response.choices[0].message.content ?? "");
-    console.log(generatedData);
     return generatedData.prList;
   } catch (error) {
     console.error("Error generating PR data:", error);
