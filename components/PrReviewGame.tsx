@@ -17,7 +17,7 @@ import Error from "./Error";
 import GameOver from "./GameOver";
 import { PR } from "@/types/PR";
 
-const INITIAL_TIME = 120;
+const INITIAL_TIME = 60;
 const COFFEE_BOOST_DURATION = 10000;
 
 export function PrReviewGame() {
