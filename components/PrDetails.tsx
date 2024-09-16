@@ -4,6 +4,7 @@ import { GitCommitIcon, MessageSquareIcon } from "lucide-react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { PR } from "@/types/PR";
+import { text } from "stream/consumers";
 
 interface PRDetailsProps {
   pr: PR;
@@ -11,7 +12,7 @@ interface PRDetailsProps {
 
 export function PRDetails({ pr }: PRDetailsProps) {
   return (
-    <div className="bg-darkGreen border border-gray-700 rounded-lg p-4 flex flex-1 min-h-0 flex-col">
+    <div className="bg-darkGreen border border-gray-700 rounded-lg p-4 flex min-h-0 flex-col">
       <div className="flex items-center gap-2 mb-2">
         <Avatar className="w-10 h-10">
           <AvatarImage src={pr.user.avatar} alt={pr.user.name} />
@@ -38,14 +39,14 @@ export function PRDetails({ pr }: PRDetailsProps) {
         <div className="flex items-center justify-between bg-darkMuted p-2 border-b border-gray-700">
           <span className="text-sm font-semibold">{pr.filename}</span>
           <span className="text-sm text-gray-600">
-            +{pr.newCode.split("\n").length} -
-            {pr.oldCode?.split("\n").length || 0}
+            +{pr.newCode.split("\n").length}
+            {pr.oldCode && `-${pr.oldCode?.split("\n").length || 0}`}
           </span>
         </div>
-        <div className="overflow-y-scroll flex flex-1 flex-col min-h-0">
+        <div className="overflow-y-auto flex flex-1 flex-col min-h-0">
           {pr.oldCode && (
             <>
-              <div className="flex bg-codeDeletion p-2">
+              <div className="flex bg-codeDeletion p-2 items-start text-left">
                 <div className="text-red-600 select-none w-5">-</div>
                 <SyntaxHighlighter
                   language="javascript"
@@ -54,21 +55,26 @@ export function PRDetails({ pr }: PRDetailsProps) {
                     margin: 0,
                     background: "transparent",
                     padding: 0,
+                    width: "100%",
+                    textAlign: "left",
                   }}
                   // Change line height to 1.5
                   showLineNumbers
                   startingLineNumber={pr.startingLineNumber}
                   lineProps={{
-                    style: { wordBreak: "break-all", whiteSpace: "pre-wrap" },
+                    style: {
+                      wordBreak: "break-all",
+                      whiteSpace: "pre-wrap",
+                    },
                   }}
                   wrapLines={true}
                 >
-                  {pr.oldCode + pr.newCode + pr.oldCode}
+                  {pr.oldCode}
                 </SyntaxHighlighter>
               </div>
             </>
           )}
-          <div className="flex bg-codeAddition p-2">
+          <div className="flex bg-codeAddition p-2 items-start text-left">
             <div className="text-green-600 select-none w-5">+</div>
             <SyntaxHighlighter
               language="javascript"
@@ -78,11 +84,16 @@ export function PRDetails({ pr }: PRDetailsProps) {
                 background: "transparent",
                 padding: 0,
                 wordBreak: "break-all",
+                width: "100%",
+                textAlign: "left",
               }}
               showLineNumbers
               startingLineNumber={pr.startingLineNumber}
               lineProps={{
-                style: { wordBreak: "break-all", whiteSpace: "pre-wrap" },
+                style: {
+                  wordBreak: "break-all",
+                  whiteSpace: "pre-wrap",
+                },
               }}
               wrapLines={true}
             >

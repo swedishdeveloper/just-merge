@@ -16,8 +16,10 @@ const PRData = z.object({
       filename: z.string(),
       oldCode: z
         .string()
-        .describe("Old code if there is any, else empty string."),
-      newCode: z.string(),
+        .describe(
+          "Old code if there is any, else empty string. Only formatted code.."
+        ),
+      newCode: z.string().describe("New code. Only formatted code."),
       startingLineNumber: z.number(),
       user: z.object({
         name: z.string(),
@@ -34,15 +36,16 @@ const PRData = z.object({
 });
 
 export async function generatePRData(): Promise<PR[]> {
-  const prompt = "Generate 1 funny pull requests.";
+  const prompt =
+    "Generate 10 funny pull requests. Create PRs with and without old code.";
 
   try {
     const response = await openai.chat.completions.create({
-      model: "gpt-4o-2024-08-06",
+      model: "gpt-4o-mini",
       messages: [
         {
           role: "system",
-          content: `You are an assistant that writes funny PRs, some of them if faulty code, some of them is correct code.
+          content: `You are an assistant that writes funny PRs, some of them if incorrect code that wont work, some of them is correct code.
             The code could be either funny or serious.`,
         },
         { role: "user", content: prompt },

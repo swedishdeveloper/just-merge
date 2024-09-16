@@ -17,7 +17,7 @@ import Error from "./Error";
 import GameOver from "./GameOver";
 import { PR } from "@/types/PR";
 
-const INITIAL_TIME = 12000;
+const INITIAL_TIME = 120;
 const COFFEE_BOOST_DURATION = 10000;
 
 export function PrReviewGame() {
@@ -151,10 +151,6 @@ export function PrReviewGame() {
     return <Error />;
   }
 
-  if (isLoading) {
-    return <Loading />;
-  }
-
   return (
     <div className="bg-darkMuted rounded-lg shadow w-full max-w-5xl flex flex-1 flex-col p-4">
       <div className="flex justify-between items-center mb-4">
@@ -174,32 +170,34 @@ export function PrReviewGame() {
       </div>
 
       {!gameOver ? (
-        <div className="flex flex-col gap-5 w-full flex-1 min-h-0">
+        <div className="relative flex flex-col gap-5 w-full flex-1 min-h-0 justify-between">
           {showErrorLog && <IncorrectNotification />}
           {showCorrectDecision && <CorrectDecisionNotification />}
-          <PRDetails pr={prData[currentPRIndex]} />
-          <GameControls
-            onDecision={handleDecision}
-            onCoffeeBoost={activateCoffeeBoost}
-            coffeeBoost={coffeeBoost}
-          />
-          {streak > 1 && (
-            <div className="mt-4 text-center">
-              <Badge variant="secondary" className="text-lg animate-pulse">
-                <StarIcon className="mr-1 h-4 w-4" /> {streak} Streak! +
-                {streak * 5} bonus
-              </Badge>
-            </div>
-          )}
-          {coffeeBoost && (
-            <div className="mt-4 text-center">
-              <Badge variant="secondary" className="text-lg animate-bounce">
-                <CoffeeIcon className="mr-1 h-4 w-4" /> Coffee Boost Active! 2x
-                Points!
-              </Badge>
-            </div>
-          )}
-          <Footer currentPRIndex={currentPRIndex} gameStats={gameStats} />
+          {isLoading ? <Loading /> : <PRDetails pr={prData[currentPRIndex]} />}
+          <div className="flex gap-5 flex-col">
+            <GameControls
+              onDecision={handleDecision}
+              onCoffeeBoost={activateCoffeeBoost}
+              coffeeBoost={coffeeBoost}
+            />
+            {streak > 1 && (
+              <div className="mt-4 text-center">
+                <Badge variant="secondary" className="text-lg animate-pulse">
+                  <StarIcon className="mr-1 h-4 w-4" /> {streak} Streak! +
+                  {streak * 5} bonus
+                </Badge>
+              </div>
+            )}
+            {coffeeBoost && (
+              <div className="mt-4 text-center">
+                <Badge variant="secondary" className="text-lg animate-bounce">
+                  <CoffeeIcon className="mr-1 h-4 w-4" /> Coffee Boost Active!
+                  2x Points!
+                </Badge>
+              </div>
+            )}
+            <Footer currentPRIndex={currentPRIndex} gameStats={gameStats} />
+          </div>
         </div>
       ) : (
         <GameOver score={score} restartGame={restartGame} />
