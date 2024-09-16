@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { GitPullRequestIcon, StarIcon, CoffeeIcon } from "lucide-react";
@@ -122,10 +122,10 @@ export function PrReviewGame() {
     fetchPRData();
   };
 
-  const activateCoffeeBoost = useCallback(() => {
+  const activateCoffeeBoost = () => {
     setCoffeeBoost(true);
     setTimeout(() => setCoffeeBoost(false), COFFEE_BOOST_DURATION);
-  }, []);
+  };
 
   const gameStats: GameStats = useMemo(
     () => ({
@@ -136,7 +136,7 @@ export function PrReviewGame() {
     [prData]
   );
 
-  const randomPRIndex = useCallback((): number => {
+  const randomPRIndex = () => {
     const availablePRs = prData.filter(
       (_, index) => !completedJobs.includes(index)
     );
@@ -145,7 +145,7 @@ export function PrReviewGame() {
           availablePRs[Math.floor(Math.random() * availablePRs.length)]
         )
       : -1;
-  }, [prData, completedJobs]);
+  };
 
   if (isError) {
     return <Error />;
