@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { GitPullRequestIcon, StarIcon, CoffeeIcon } from "lucide-react";
 import { generatePRData } from "@/lib/gpt";
@@ -17,9 +16,11 @@ import Error from "./Error";
 import GameOver from "./GameOver";
 import { PR } from "@/types/PR";
 import { Timer } from "./Timer";
+import StartGame from "./StartGame";
 
 const InitialTime = 60;
 const COFFEE_BOOST_DURATION = 10000;
+const prCount = 12;
 
 export function PrReviewGame() {
   const [prData, setPRData] = useState<PR[]>([]);
@@ -35,9 +36,10 @@ export function PrReviewGame() {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
+  const [waitingForPRs, setWaitingForPRs] = useState(false);
 
   useEffect(() => {
-    fetchPRData();
+    fetchPRs();
   }, []);
 
   useEffect(() => {
@@ -47,6 +49,9 @@ export function PrReviewGame() {
     }
 
     if (!gameStarted) return;
+
+    checkWaitingForPRs();
+
     const timer = setInterval(() => {
       setTimeLeft((prev) => prev - 1);
     }, 1000);
@@ -55,27 +60,51 @@ export function PrReviewGame() {
   }, [gameOver, timeLeft, gameStarted]);
 
   useEffect(() => {
-    if (completedJobs.length === prData.length && prData.length > 0) {
+    if (isGameFinished()) {
       setGameOver(true);
       confetti();
     }
   }, [completedJobs, prData, timeLeft]);
 
-  const fetchPRData = async () => {
+  const fetchPRs = async () => {
+    setPRData([]);
     try {
       setIsLoading(true);
-      const data = await generatePRData();
-      setPRData(data);
-      setIsLoading(false);
+
+      const prPromises = Array(prCount / 3)
+        .fill(null)
+        .map(() => generatePRData());
+
+      prPromises.forEach((prPromise) => {
+        prPromise
+          .then((newPR) => {
+            setPRData((prevPRData) => {
+              const updatedPRData = [...prevPRData, ...newPR];
+
+              if (prevPRData.length === 0) {
+                setIsLoading(false);
+              }
+
+              return updatedPRData;
+            });
+          })
+          .catch((error) => {
+            console.error("Failed to fetch PR:", error);
+            setIsError(true);
+          });
+      });
     } catch (error) {
-      console.error("Failed to fetch PR data:", error);
+      console.error("Failed to fetch PRs:", error);
       setIsError(true);
       setIsLoading(false);
     }
   };
 
   const handleDecision = (decision: string) => {
-    console.log("Handle decision", decision);
+    if (waitingForPRs) {
+      return;
+    }
+
     const currentPR = prData[currentPRIndex];
     const isCorrectDecision =
       (currentPR.isCorrect && decision === "merge") ||
@@ -122,7 +151,8 @@ export function PrReviewGame() {
     setShowErrorLog(false);
     setShowCorrectDecision(false);
     setCompletedJobs([]);
-    fetchPRData();
+    setPRData([]);
+    fetchPRs();
   };
 
   const activateCoffeeBoost = () => {
@@ -150,6 +180,17 @@ export function PrReviewGame() {
       : -1;
   };
 
+  const isGameFinished = () => {
+    console.log("completedJobs", completedJobs);
+    return completedJobs.length === prCount;
+  };
+
+  const checkWaitingForPRs = () => {
+    setWaitingForPRs(
+      completedJobs.length === prData.length && prData.length < prCount
+    );
+  };
+
   if (isError) {
     return <Error />;
   }
@@ -165,52 +206,44 @@ export function PrReviewGame() {
         </div>
         {gameStarted && <Timer InitialTime={InitialTime} timeLeft={timeLeft} />}
       </div>
-      {!gameOver && !isLoading ? (
+      {!gameOver && !isLoading && gameStarted ? (
         <div className="relative flex flex-col gap-5 w-full flex-1 min-h-0 justify-between">
           {showErrorLog && <IncorrectNotification />}
           {showCorrectDecision && <CorrectDecisionNotification />}
           <PRDetails pr={prData[currentPRIndex]} />
-          {gameStarted ? (
-            <div className="flex gap-5 flex-col">
-              <GameControls
-                onDecision={handleDecision}
-                onCoffeeBoost={activateCoffeeBoost}
-                coffeeBoost={coffeeBoost}
-              />
-              {streak > 1 && (
-                <div className="mt-4 text-center">
-                  <Badge variant="secondary" className="text-lg animate-pulse">
-                    <StarIcon className="mr-1 h-4 w-4" /> {streak} Streak! +
-                    {streak * 5} bonus
-                  </Badge>
-                </div>
-              )}
-              {coffeeBoost && (
-                <div className="mt-4 text-center">
-                  <Badge variant="secondary" className="text-lg animate-bounce">
-                    <CoffeeIcon className="mr-1 h-4 w-4" /> Coffee Boost Active!
-                    2x Points!
-                  </Badge>
-                </div>
-              )}
-              <Footer currentPRIndex={currentPRIndex} gameStats={gameStats} />
-            </div>
-          ) : (
-            prData &&
-            prData.length > 0 && (
-              <button
-                onClick={() => setGameStarted(true)}
-                className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-md"
-              >
-                Start Game
-              </button>
-            )
-          )}
+          <div className="flex gap-5 flex-col">
+            <GameControls
+              onDecision={handleDecision}
+              onCoffeeBoost={activateCoffeeBoost}
+              coffeeBoost={coffeeBoost}
+              waitingForPRs={waitingForPRs}
+            />
+            {streak > 1 && (
+              <div className="mt-4 text-center">
+                <Badge variant="secondary" className="text-lg animate-pulse">
+                  <StarIcon className="mr-1 h-4 w-4" /> {streak} Streak! +
+                  {streak * 5} bonus
+                </Badge>
+              </div>
+            )}
+            {coffeeBoost && (
+              <div className="mt-4 text-center">
+                <Badge variant="secondary" className="text-lg animate-bounce">
+                  <CoffeeIcon className="mr-1 h-4 w-4" /> Coffee Boost Active!
+                  2x Points!
+                </Badge>
+              </div>
+            )}
+            <Footer completedJobs={completedJobs} gameStats={gameStats} />
+          </div>
         </div>
       ) : gameOver ? (
         <GameOver score={score} restartGame={restartGame} />
+      ) : isLoading ? (
+        <Loading />
       ) : (
-        isLoading && <Loading />
+        prData &&
+        prData.length > 0 && <StartGame setGameStarted={setGameStarted} />
       )}
     </div>
   );
