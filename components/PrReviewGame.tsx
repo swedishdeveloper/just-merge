@@ -3,7 +3,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { GitPullRequestIcon, StarIcon, CoffeeIcon } from "lucide-react";
-import { generatePRData } from "@/lib/gpt";
 import confetti from "canvas-confetti";
 import { CorrectDecisionNotification } from "@/components/CorrectDescisionNotification";
 import { IncorrectNotification } from "@/components/IncorrectNotification";
@@ -57,7 +56,7 @@ export function PrReviewGame() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [gameOver, timeLeft, gameStarted]);
+  }, [gameOver, timeLeft, gameStarted, isLoading]);
 
   useEffect(() => {
     if (isGameFinished()) {
@@ -71,9 +70,22 @@ export function PrReviewGame() {
     try {
       setIsLoading(true);
 
+      // Make multiple API requests to the API route
       const prPromises = Array(prCount / 3)
         .fill(null)
-        .map(() => generatePRData());
+        .map(
+          () =>
+            fetch("/api/generatePR")
+              .then((res) => {
+                if (res.status === 429) {
+                  throw Error();
+                } else if (!res.ok) {
+                  throw Error();
+                }
+                return res.json();
+              })
+              .then((data) => data.prData) // Extract the PR data from the response
+        );
 
       prPromises.forEach((prPromise) => {
         prPromise
@@ -81,6 +93,7 @@ export function PrReviewGame() {
             setPRData((prevPRData) => {
               const updatedPRData = [...prevPRData, ...newPR];
 
+              // Set loading to false after the first batch of PRs is loaded
               if (prevPRData.length === 0) {
                 setIsLoading(false);
               }
