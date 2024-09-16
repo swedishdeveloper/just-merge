@@ -18,7 +18,7 @@ import { PR } from "@/types/PR";
 import { Timer } from "./Timer";
 import StartGame from "./StartGame";
 
-const InitialTime = 60;
+const InitialTime = 120;
 const COFFEE_BOOST_DURATION = 10000;
 const prCount = 12;
 
