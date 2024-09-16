@@ -22,7 +22,7 @@ const PRData = z.object({
       newCode: z.string().describe("New code. Only formatted code."),
       startingLineNumber: z.number(),
       user: z.object({
-        name: z.string(),
+        name: z.string().describe("Name of the user."),
         avatar: z
           .string()
           .describe("URL to the user's avatar, i.pravatar.cc url."),
@@ -55,6 +55,7 @@ export async function generatePRData(): Promise<PR[]> {
     });
 
     const generatedData = JSON.parse(response.choices[0].message.content ?? "");
+    console.log(generatedData);
     return generatedData.prList;
   } catch (error) {
     console.error("Error generating PR data:", error);
