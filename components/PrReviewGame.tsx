@@ -62,11 +62,13 @@ export function PrReviewGame() {
     try {
       setIsLoading(true);
       const data = await generatePRData();
-      setPRData(data);
+      if (data) {
+        setPRData(data);
+        setIsLoading(false);
+      }
     } catch (error) {
       console.error("Failed to fetch PR data:", error);
       setIsError(true);
-    } finally {
       setIsLoading(false);
     }
   };
