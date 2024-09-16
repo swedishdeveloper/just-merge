@@ -48,7 +48,7 @@ export function PrReviewGame() {
       return;
     }
 
-    if (!gameStarted) return;
+    if (!gameStarted || isLoading) return;
 
     checkWaitingForPRs();
 
@@ -181,7 +181,6 @@ export function PrReviewGame() {
   };
 
   const isGameFinished = () => {
-    console.log("completedJobs", completedJobs);
     return completedJobs.length === prCount;
   };
 
