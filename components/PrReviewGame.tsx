@@ -109,7 +109,7 @@ export function PrReviewGame() {
     return () => clearTimeout(timer);
   };
 
-  const restartGame = useCallback(() => {
+  const restartGame = () => {
     setCurrentPRIndex(0);
     setScore(0);
     setTimeLeft(INITIAL_TIME);
@@ -120,7 +120,7 @@ export function PrReviewGame() {
     setShowCorrectDecision(false);
     setCompletedJobs([]);
     fetchPRData();
-  }, []);
+  };
 
   const activateCoffeeBoost = useCallback(() => {
     setCoffeeBoost(true);
