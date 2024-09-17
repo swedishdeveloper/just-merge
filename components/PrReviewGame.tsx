@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { Badge } from "@/components/ui/badge";
-import { GitPullRequestIcon, StarIcon, CoffeeIcon } from "lucide-react";
+import { GitPullRequestIcon } from "lucide-react";
 import confetti from "canvas-confetti";
 import { CorrectDecisionNotification } from "@/components/CorrectDescisionNotification";
 import { IncorrectNotification } from "@/components/IncorrectNotification";
