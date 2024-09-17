@@ -69,43 +69,10 @@ export function PrReviewGame() {
     setPRData([]);
     try {
       setIsLoading(true);
-
-      // Make multiple API requests to the API route
-      const prPromises = Array(prCount / 3)
-        .fill(null)
-        .map(
-          () =>
-            fetch("/api/generatePR")
-              .then((res) => {
-                if (res.status === 429) {
-                  throw Error();
-                } else if (!res.ok) {
-                  throw Error();
-                }
-                return res.json();
-              })
-              .then((data) => data.prData) // Extract the PR data from the response
-        );
-
-      prPromises.forEach((prPromise) => {
-        prPromise
-          .then((newPR) => {
-            setPRData((prevPRData) => {
-              const updatedPRData = [...prevPRData, ...newPR];
-
-              // Set loading to false after the first batch of PRs is loaded
-              if (prevPRData.length === 0) {
-                setIsLoading(false);
-              }
-
-              return updatedPRData;
-            });
-          })
-          .catch((error) => {
-            console.error("Failed to fetch PR:", error);
-            setIsError(true);
-          });
-      });
+      const response = await fetch(`/api/pr/?limit=3`);
+      const data = await response.json();
+      setPRData(data.PRs);
+      setIsLoading(false);
     } catch (error) {
       console.error("Failed to fetch PRs:", error);
       setIsError(true);
