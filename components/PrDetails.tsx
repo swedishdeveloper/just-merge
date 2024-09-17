@@ -102,7 +102,7 @@ export function PRDetails({ pr, streak }: PRDetailsProps) {
           </div>
         </div>
       </div>
-      <div className="flex items-center text-sm text-gray-500 mt-2 justify-between">
+      <div className="flex items-center text-xs text-gray-500 mt-2 justify-between">
         <div className="flex items-center">
           <span className="flex items-center mr-4">
             <GitCommitIcon className="mr-1 h-4 w-4" /> {pr.commits} commit
@@ -115,8 +115,7 @@ export function PRDetails({ pr, streak }: PRDetailsProps) {
         </div>
         {streak > 1 && (
           <Badge variant="secondary" className="animate-pulse rounded-md">
-            <StarIcon className="mr-1 h-4 w-4" /> {streak} Streak! +{streak * 5}{" "}
-            bonus
+            <StarIcon className="mr-1 h-4 w-4" /> {streak} Streak! +{streak * 5}
           </Badge>
         )}
       </div>
