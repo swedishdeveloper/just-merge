@@ -69,7 +69,7 @@ export function PrReviewGame() {
     setPRData([]);
     try {
       setIsLoading(true);
-      const response = await fetch(`/api/pr/?limit=3`);
+      const response = await fetch(`/api/pr/?limit=12`);
       const data = await response.json();
       setPRData(data.PRs);
       setIsLoading(false);
