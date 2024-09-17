@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import { generatePRData } from "@/lib/gpt";
-import type { PR } from "@/types/PR";
 
-export async function POST(req: Request) {
+export async function POST() {
   try {
     const client = await clientPromise;
     const database = client.db("just-merge");
