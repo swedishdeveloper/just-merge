@@ -1,15 +1,16 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { GitCommitIcon, MessageSquareIcon } from "lucide-react";
+import { GitCommitIcon, MessageSquareIcon, StarIcon } from "lucide-react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { PR } from "@/types/PR";
 
 interface PRDetailsProps {
   pr: PR;
+  streak: number;
 }
 
-export function PRDetails({ pr }: PRDetailsProps) {
+export function PRDetails({ pr, streak }: PRDetailsProps) {
   return (
     <div className="bg-darkGreen border border-gray-700 rounded-lg p-4 flex min-h-0 flex-col">
       <div className="flex items-center gap-2 mb-2">
@@ -101,15 +102,23 @@ export function PRDetails({ pr }: PRDetailsProps) {
           </div>
         </div>
       </div>
-      <div className="flex items-center text-sm text-gray-500 mt-2">
-        <span className="flex items-center mr-4">
-          <GitCommitIcon className="mr-1 h-4 w-4" /> {pr.commits} commit
-          {pr.commits > 1 ? "s" : ""}
-        </span>
-        <span className="flex items-center">
-          <MessageSquareIcon className="mr-1 h-4 w-4" /> {pr.comments} comment
-          {pr.comments > 1 ? "s" : ""}
-        </span>
+      <div className="flex items-center text-sm text-gray-500 mt-2 justify-between">
+        <div className="flex items-center">
+          <span className="flex items-center mr-4">
+            <GitCommitIcon className="mr-1 h-4 w-4" /> {pr.commits} commit
+            {pr.commits > 1 ? "s" : ""}
+          </span>
+          <span className="flex items-center">
+            <MessageSquareIcon className="mr-1 h-4 w-4" /> {pr.comments} comment
+            {pr.comments > 1 ? "s" : ""}
+          </span>
+        </div>
+        {streak > -1 && (
+          <Badge variant="secondary" className="animate-pulse rounded-md">
+            <StarIcon className="mr-1 h-4 w-4" /> {streak} Streak! +{streak * 5}{" "}
+            bonus
+          </Badge>
+        )}
       </div>
     </div>
   );

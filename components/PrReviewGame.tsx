@@ -189,7 +189,7 @@ export function PrReviewGame() {
         <div className="relative flex flex-col gap-5 w-full flex-1 min-h-0 justify-between">
           {showErrorLog && <IncorrectNotification />}
           {showCorrectDecision && <CorrectDecisionNotification />}
-          <PRDetails pr={prData[currentPRIndex]} />
+          <PRDetails pr={prData[currentPRIndex]} streak={streak} />
           <div className="flex gap-5 flex-col">
             <GameControls
               onDecision={handleDecision}
@@ -197,22 +197,6 @@ export function PrReviewGame() {
               coffeeBoost={coffeeBoost}
               waitingForPRs={waitingForPRs}
             />
-            {streak > 1 && (
-              <div className="mt-4 text-center">
-                <Badge variant="secondary" className="text-lg animate-pulse">
-                  <StarIcon className="mr-1 h-4 w-4" /> {streak} Streak! +
-                  {streak * 5} bonus
-                </Badge>
-              </div>
-            )}
-            {coffeeBoost && (
-              <div className="mt-4 text-center">
-                <Badge variant="secondary" className="text-lg animate-bounce">
-                  <CoffeeIcon className="mr-1 h-4 w-4" /> Coffee Boost Active!
-                  2x Points!
-                </Badge>
-              </div>
-            )}
             <Footer completedJobs={completedJobs} gameStats={gameStats} />
           </div>
         </div>

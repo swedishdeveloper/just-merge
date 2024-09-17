@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { GitMergeIcon, XIcon, CoffeeIcon } from "lucide-react";
+import { GitMergeIcon, XIcon, CoffeeIcon, StarIcon } from "lucide-react";
 import { GameControlsProps } from "@/types/GameControlsProps";
 
 export function GameControls({
@@ -12,7 +12,7 @@ export function GameControls({
 }: GameControlsProps) {
   return (
     <div className="border border-gray-700 rounded-lg p-4 flex">
-      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 w-full">
+      <div className="grid grid-rows-1 grid-cols-2 sm:grid-cols-3 justify-between items-center gap-4 w-full">
         <Button
           onClick={() => onDecision("merge")}
           className="w-full bg-green-500 hover:bg-green-600 text-green-900 font-bold"
@@ -30,9 +30,20 @@ export function GameControls({
         <Button
           onClick={onCoffeeBoost}
           disabled={coffeeBoost || waitingForPRs}
-          className="w-full bg-amber-500 hover:bg-amber-600 disabled:bg-amber-300 text-amber-900 font-bold"
+          className={`w-full bg-amber-500 hover:bg-amber-600 disabled:bg-amber-300 text-amber-900 font-bold col-span-2 sm:col-auto ${
+            coffeeBoost && "animate-bounce"
+          }`}
         >
-          <CoffeeIcon className="mr-2 h-4 w-4" /> Coffee Boost
+          {coffeeBoost ? (
+            <>
+              <CoffeeIcon className="mr-2 h-4 w-4" /> Coffee Boost Active! 2x
+              Points!
+            </>
+          ) : (
+            <>
+              <CoffeeIcon className="mr-2 h-4 w-4" /> Coffee Boost
+            </>
+          )}
         </Button>
       </div>
     </div>
