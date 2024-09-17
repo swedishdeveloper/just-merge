@@ -1,29 +1,16 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb"; // Import the clientPromise
+import { generatePRData } from "@/lib/gpt";
 
 export async function POST(req: Request) {
   try {
     const client = await clientPromise; // Reuse the existing connection
     const database = client.db("just-merge");
     const collection = database.collection("PRs");
-    const pr = await collection.insertOne({
-      title: "Test PR",
-      description: "This is a test PR",
-      filename: "test.js",
-      oldCode: "",
-      newCode: "console.log('Hello, World!');",
-      startingLineNumber: 1,
-      user: {
-        name: "Test User",
-        avatar: "https://i.pravatar.cc/150?u=test-user",
-      },
-      labels: ["test"],
-      commits: 1,
-      comments: 0,
-      isCorrect: true,
-    });
+    const prData = await generatePRData();
+    const result = await collection.insertMany(prData);
     return NextResponse.json(
-      { message: "User added successfully", user },
+      { message: "PRs added successfully", prData },
       { status: 200 }
     );
   } catch (error) {
