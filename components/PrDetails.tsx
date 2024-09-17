@@ -113,7 +113,7 @@ export function PRDetails({ pr, streak }: PRDetailsProps) {
             {pr.comments > 1 ? "s" : ""}
           </span>
         </div>
-        {streak > -1 && (
+        {streak > 1 && (
           <Badge variant="secondary" className="animate-pulse rounded-md">
             <StarIcon className="mr-1 h-4 w-4" /> {streak} Streak! +{streak * 5}{" "}
             bonus
