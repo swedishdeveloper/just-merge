@@ -8,7 +8,7 @@ export async function POST(req: Request) {
     const client = await clientPromise;
     const database = client.db("just-merge");
     const collection = database.collection("PRs");
-    const iterations = 2;
+    const iterations = 30;
     const prData = await Promise.all(
       Array.from({ length: iterations }, () => generatePRData())
     ).then((results) => results.flat());
