@@ -4,7 +4,7 @@ import { GameOverProps } from "@/types/GameOver";
 
 const GameOver = ({ score, restartGame }: GameOverProps) => {
   return (
-    <div className="text-center bg-darkGreen p-12 rounded-xl flex flex-1 flex-col justify-center items-center">
+    <div className="bg-darkGreen h-full flex flex-col items-center justify-center gap-5 rounded-lg">
       <h2 className="text-4xl font-bold mb-6 text-lightGreen">Game Over!</h2>
       <p className="text-3xl mb-8 text-white">
         Your final score:{" "}

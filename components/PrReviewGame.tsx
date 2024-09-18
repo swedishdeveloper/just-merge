@@ -7,7 +7,6 @@ import { CorrectDecisionNotification } from "@/components/CorrectDescisionNotifi
 import { IncorrectNotification } from "@/components/IncorrectNotification";
 import { PRDetails } from "@/components/PrDetails";
 import { GameControls } from "./GameControls";
-import Footer from "./Footer";
 import { GameStats } from "@/types/GameStats";
 import Loading from "./Loading";
 import Error from "./Error";
@@ -188,7 +187,12 @@ export function PrReviewGame() {
         <div className="relative flex flex-col gap-5 w-full flex-1 min-h-0 justify-between">
           {showErrorLog && <IncorrectNotification />}
           {showCorrectDecision && <CorrectDecisionNotification />}
-          <PRDetails pr={prData[currentPRIndex]} streak={streak} />
+          <PRDetails
+            pr={prData[currentPRIndex]}
+            streak={streak}
+            completedJobs={completedJobs}
+            gameStats={gameStats}
+          />
           <div className="flex gap-5 flex-col">
             <GameControls
               onDecision={handleDecision}
@@ -196,7 +200,6 @@ export function PrReviewGame() {
               coffeeBoost={coffeeBoost}
               waitingForPRs={waitingForPRs}
             />
-            <Footer completedJobs={completedJobs} gameStats={gameStats} />
           </div>
         </div>
       ) : gameOver ? (
