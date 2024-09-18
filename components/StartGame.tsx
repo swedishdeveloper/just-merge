@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 const StartGame = ({
   setGameStarted,
@@ -6,7 +7,16 @@ const StartGame = ({
   setGameStarted: (value: boolean) => void;
 }) => {
   return (
-    <div className="bg-darkGreen h-full flex flex-col items-start justify-center gap-5 rounded-lg py-4 px-20">
+    <div className="bg-darkGreen h-full flex flex-col items-start justify-end gap-5 rounded-lg p-4">
+      <div className="h-full relative w-full flex flex-col">
+        <Image
+          src="/merge.png"
+          alt="Merge illustration"
+          className="object-left object-cover rounded-lg shadow-lg opacity-50"
+          fill
+          priority
+        />
+      </div>
       <h1 className="text-4xl font-bold text-lightGreen">How to play</h1>
       <p>
         Just Merge is a game where you have to review pull requests and decide

@@ -68,7 +68,7 @@ export function PRDetails({
         <div className="overflow-y-auto flex flex-1 flex-col min-h-0">
           {pr.oldCode && (
             <>
-              <div className="flex bg-codeDeletion p-2 items-start text-left">
+              <div className="flex bg-codeDeletion p-2 items-start text-left text-sm">
                 <div className="text-red-600 select-none w-5">-</div>
                 <SyntaxHighlighter
                   language="javascript"
