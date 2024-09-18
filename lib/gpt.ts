@@ -37,7 +37,7 @@ const PRData = z.object({
 
 export async function generatePRData(): Promise<PR[]> {
   const prompt =
-    "Create 5 hilarious pull requests that give a comedic take on common programming tasks, such as adding new features or fixing bugs. Each should be clever, witty, and crafted to make developers burst out laughing.";
+    "Generate 5 funny and inventive pull requests that offer unconventional and humorous solutions to common programming challenges, such as performance optimization or UI improvements. Each should be clever, lighthearted, and guaranteed to entertain while solving the problem in a playful way.";
 
   try {
     const response = await openai.chat.completions.create({
